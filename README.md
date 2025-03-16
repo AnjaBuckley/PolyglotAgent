@@ -213,23 +213,6 @@ Run the test script to verify everything is working:
 python test_assistant.py
 ```
 
-## Project Structure
-Polyglot/
-├── generated_audio/
-├── .env # For API keys if needed
-├── .gitignore # Git ignore file
-├── README.md # Project documentation
-├── requirements.txt # Dependencies
-├── src/
-│ ├── init.py
-│ ├── language_learning_assistant.py
-│ └── tools/
-│ ├── init.py
-│ ├── audio_tools.py
-│ ├── content_tools.py
-│ ├── search_tools.py
-│ └── validation_tools.py
-└── test_assistant.py # Main test/demo script
 
 ## Usage Examples
 
