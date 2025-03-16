@@ -180,23 +180,6 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-## Project Structure
-Polyglot/
-├── .env # For API keys if needed
-├── .gitignore # Git ignore file
-├── README.md # Project documentation
-├── requirements.txt # Dependencies
-├── src/
-│ ├── init.py
-│ ├── language_learning_assistant.py
-│ └── tools/
-│ ├── init.py
-│ ├── audio_tools.py
-│ ├── content_tools.py
-│ ├── search_tools.py
-│ └── validation_tools.py
-└── test_assistant.py # Main test/demo script
-
 ## Usage Examples
 
 ### With Audio Generation
