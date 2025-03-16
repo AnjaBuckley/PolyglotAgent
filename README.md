@@ -161,24 +161,75 @@ async def _handle_song_request(self, request: str, target_language: str, native_
 4. **Flexibility**: Can handle various types of language learning requests
 5. **Resource Management**: Audio generation only when needed
 
-## Installation
+## Setup
+
+### 1. Environment Setup
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd language-learning-assistant
+git clone https://github.com/AnjaBuckley/PolyglotAgent.git
+cd PolyglotAgent
 ```
 
 2. Create and activate a virtual environment:
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```
 
 3. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
+
+### 2. OpenAI API Key Setup
+
+1. Get your OpenAI API key:
+   - Go to [OpenAI's platform](https://platform.openai.com/)
+   - Sign up or log in
+   - Navigate to 'API Keys'
+   - Create a new secret key
+
+2. Create a `.env` file in the project root:
+```bash
+touch .env
+```
+
+3. Add your OpenAI API key to `.env`:
+```text
+OPENAI_API_KEY=your-api-key-here
+```
+
+⚠️ **Important Security Notes**:
+- Never commit your `.env` file to version control
+- Keep your API key secret and secure
+- If you accidentally expose your key, rotate it immediately on OpenAI's platform
+- The `.gitignore` file is configured to prevent committing the `.env` file
+
+### 3. Verify Setup
+
+Run the test script to verify everything is working:
+```bash
+python test_assistant.py
+```
+
+## Project Structure
+Polyglot/
+├── generated_audio/
+├── .env # For API keys if needed
+├── .gitignore # Git ignore file
+├── README.md # Project documentation
+├── requirements.txt # Dependencies
+├── src/
+│ ├── init.py
+│ ├── language_learning_assistant.py
+│ └── tools/
+│ ├── init.py
+│ ├── audio_tools.py
+│ ├── content_tools.py
+│ ├── search_tools.py
+│ └── validation_tools.py
+└── test_assistant.py # Main test/demo script
 
 ## Usage Examples
 
