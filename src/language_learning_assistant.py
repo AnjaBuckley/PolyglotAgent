@@ -13,22 +13,19 @@ class LanguageLearningAssistant:
         self, user_request: str, native_language: str = "en"
     ) -> Dict:
         """
-        Process a language learning request and return appropriate content.
+        Main decision-making method that determines which tools to use based on the request.
         """
         try:
-            # First validate if this is a language learning request
+            # STEP 1: Validation Tool
             validation = analyze_language_confidence(user_request)
 
             if not validation["is_language_question"]:
                 return {
                     "status": "error",
-                    "message": "Please ask a language-related question. For example:\n"
-                    "- How do you say 'hello' in German?\n"
-                    "- Find me a Spanish song\n"
-                    "- Teach me French food vocabulary",
+                    "message": "Please ask a language-related question.",
                 }
 
-            # Detect target language from the request
+            # STEP 2: Language Detection
             target_language = (
                 validation["detected_languages"][0]
                 if validation["detected_languages"]
@@ -40,7 +37,7 @@ class LanguageLearningAssistant:
                     "message": "Please specify which language you want to learn about.",
                 }
 
-            # Check if audio is requested
+            # STEP 3: Audio Request Detection
             wants_audio = any(
                 word in user_request.lower()
                 for word in [
@@ -53,23 +50,36 @@ class LanguageLearningAssistant:
                 ]
             )
 
-            # Determine request type and process accordingly
+            # STEP 4: Request Type Classification and Tool Selection
             if "song" in user_request.lower():
+                # Uses: search_tools (web_search, find_youtube_video, get_song_lyrics)
+                #       content_tools (for translation)
+                #       audio_tools (if requested)
                 return await self._handle_song_request(
                     user_request, target_language, native_language, wants_audio
                 )
+
             elif "poem" in user_request.lower():
+                # Uses: search_tools (web_search)
+                #       content_tools (for translation)
+                #       audio_tools (if requested)
                 return await self._handle_poem_request(
                     user_request, target_language, native_language, wants_audio
                 )
+
             elif any(
                 word in user_request.lower()
                 for word in ["vocabulary", "words", "vocab"]
             ):
+                # Uses: content_tools (for vocabulary and translation)
+                #       audio_tools (if requested)
                 return await self._handle_vocabulary_request(
                     user_request, target_language, native_language, wants_audio
                 )
+
             else:
+                # Uses: content_tools (for translation)
+                #       audio_tools (if requested)
                 return await self._handle_general_translation_request(
                     user_request, target_language, native_language, wants_audio
                 )
