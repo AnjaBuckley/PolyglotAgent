@@ -4,23 +4,41 @@ A comprehensive language learning tool that combines various features to help us
 
 ## Features
 
-- **Language Detection & Validation**
-  - Automatically detects target language
-  - Validates language learning requests
-  - Supports multiple languages (German, Spanish, French, Italian)
+### Core Functionality
+- Language detection and validation
+- Content translation
+- Vocabulary extraction
+- Practice exercise generation
 
-- **Content Types**
-  - Songs with lyrics and translations
-  - Poems with analysis
-  - Vocabulary lists
-  - Translation requests
+### Audio Support
+Audio generation is available when specifically requested using keywords:
+- "pronounce"
+- "pronunciation"
+- "say"
+- "speak"
+- "audio"
+- "sound"
 
-- **Learning Tools**
-  - Audio pronunciation
-  - Vocabulary exercises
-  - Translation support
-  - Practice lessons
-  - YouTube video integration (for songs)
+### Content Types
+1. **Songs**
+   - Lyrics retrieval
+   - Translation
+   - YouTube video links
+   - Optional pronunciation audio
+
+2. **Poems**
+   - Text retrieval
+   - Translation
+   - Optional pronunciation audio
+
+3. **Vocabulary**
+   - Topic-based word lists
+   - Translations
+   - Optional pronunciation audio
+
+4. **Translations**
+   - Text translation
+   - Optional pronunciation audio
 
 ## Installation
 
@@ -42,13 +60,45 @@ pip install -r requirements.txt
 ```
 
 ## Project Structure
+Polyglot/
+├── .env # For API keys if needed
+├── .gitignore # Git ignore file
+├── README.md # Project documentation
+├── requirements.txt # Dependencies
+├── src/
+│ ├── init.py
+│ ├── language_learning_assistant.py
+│ └── tools/
+│ ├── init.py
+│ ├── audio_tools.py
+│ ├── content_tools.py
+│ ├── search_tools.py
+│ └── validation_tools.py
+└── test_assistant.py # Main test/demo script
 
+## Usage Examples
+
+### With Audio Generation
+```python
+# These requests will include audio
+requests_with_audio = [
+    "How do you pronounce 'hello' in German?",
+    "Can you teach me how to say 'good morning' in Spanish?",
+    "I want to hear the pronunciation of these French words about food"
+]
 ```
 
-## Usage
+### Without Audio Generation
+```python
+# These requests will not include audio
+requests_without_audio = [
+    "Find me a German song about love",
+    "Translate 'good evening' to Italian",
+    "Show me some Spanish vocabulary about colors"
+]
+```
 
 ### Basic Usage
-
 ```python
 from src.language_learning_assistant import LanguageLearningAssistant
 import asyncio
@@ -56,107 +106,87 @@ import asyncio
 async def main():
     assistant = LanguageLearningAssistant()
     
-    # Example requests
-    requests = [
-        "Can you find me a German song about love?",
-        "I want to learn Spanish vocabulary about food",
-        "How do you say 'good morning' in French?",
-        "Find me an Italian poem"
-    ]
+    # Example with audio
+    result = await assistant.process_request(
+        "How do you pronounce 'hello' in German?"
+    )
+    print(result)  # Will include audio paths
     
-    for request in requests:
-        result = await assistant.process_request(request)
-        print(f"\nRequest: {request}")
-        print("Result:", result)
+    # Example without audio
+    result = await assistant.process_request(
+        "Translate 'good morning' to Spanish"
+    )
+    print(result)  # Will not include audio
 
 if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-### Example Requests
-
-1. **Songs**
-```python
-result = await assistant.process_request("Can you find me a German song about love?")
-```
-
-2. **Vocabulary**
-```python
-result = await assistant.process_request("I want to learn Spanish vocabulary about food")
-```
-
-3. **Translations**
-```python
-result = await assistant.process_request("How do you say 'good morning' in French?")
-```
-
-4. **Poems**
-```python
-result = await assistant.process_request("Find me an Italian poem")
-```
-
 ## Response Format
 
-The assistant returns responses in the following format:
-
+### With Audio Request
 ```python
 {
     "status": "success",
-    "type": "song|poem|vocabulary|translation",
+    "type": "translation",
     "content": {
         "original_text": str,
         "translation": str,
         "vocabulary": {
             "words": List[str],
             "translations": Dict[str, str]
-        },
-        "difficulty_level": str
+        }
     },
-    "audio": str,  # Path to audio file
-    "exercises": Dict,  # Practice exercises
-    "video": Dict  # For songs only
+    "audio": "path/to/audio.mp3",  # Only included when audio is requested
+    "exercises": Dict
 }
 ```
 
-## Tools
-
-### Validation Tool
-- Analyzes requests to determine if they're language-learning related
-- Calculates confidence scores
-- Detects target language
-
-### Content Tool
-- Generates translations
-- Creates vocabulary lists
-- Assesses content difficulty
-- Generates practice exercises
-
-### Audio Tool
-- Creates pronunciation audio files
-- Supports multiple languages
-- Uses gTTS (Google Text-to-Speech)
-
-### Search Tool
-- Finds songs and poems
-- Retrieves lyrics and content
-- Searches for related videos
+### Without Audio Request
+```python
+{
+    "status": "success",
+    "type": "translation",
+    "content": {
+        "original_text": str,
+        "translation": str,
+        "vocabulary": {
+            "words": List[str],
+            "translations": Dict[str, str]
+        }
+    },
+    "exercises": Dict
+}
+```
 
 ## Supported Languages
-
 - German (de)
 - Spanish (es)
 - French (fr)
 - Italian (it)
 
-## Development
-
-To run tests:
+## Testing
+Run the test script to see examples of different types of requests:
 ```bash
 python test_assistant.py
 ```
 
-## Contributing
+## Error Handling
+The assistant validates requests and returns appropriate error messages:
+```python
+{
+    "status": "error",
+    "message": "Please ask a language-related question."
+}
+```
 
+## Dependencies
+- deep-translator: For translations
+- gTTS: For audio generation (when requested)
+- langdetect: For language detection
+- duckduckgo-search: For web content retrieval
+
+## Contributing
 1. Fork the repository
 2. Create a feature branch
 3. Commit your changes
@@ -164,11 +194,9 @@ python test_assistant.py
 5. Create a Pull Request
 
 ## License
-
 MIT License
 
-## Acknowledgments
-
-- Uses DuckDuckGo for web searches
-- Uses Google Text-to-Speech for audio generation
-- Uses deep-translator for translations
+## Notes
+- Audio files are only generated when explicitly requested
+- Audio generation requires internet connection (uses gTTS)
+- Generated audio files are saved in the `generated_audio` directory
